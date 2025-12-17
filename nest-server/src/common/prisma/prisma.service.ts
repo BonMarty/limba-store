@@ -8,16 +8,23 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor() {
-    const adapter = new PrismaPg({ url: process.env.DATABASE_URL });
+    const adapter = new PrismaPg({
+      connectionString: process.env.DATABASE_URL,
+    });
     super({ adapter });
   }
 
   async onModuleInit() {
-    console.log('Connected to database');
     await this.$connect();
   }
 
   async onModuleDestroy() {
     await this.$disconnect();
+  }
+
+  async reset() {
+    return this.$queryRaw`
+      TRUNCATE TABLE "users", "products"
+    `;
   }
 }
