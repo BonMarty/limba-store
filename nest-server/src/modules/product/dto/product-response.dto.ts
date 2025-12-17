@@ -1,13 +1,13 @@
-import type { $Enums, Product } from 'generated/prisma';
+import type { Product } from 'generated/prisma';
 
-type BaseProduct = Omit<Product, 'price' | 'rate' | 'count'>;
+type BaseProduct = Omit<Product, 'price' | 'rate' | 'count' | 'category'>;
 
 export class ProductResponseDto implements BaseProduct {
   id: number;
   title: string;
   price: string;
   description: string;
-  category: $Enums.ProductCategory;
+  category: string;
   image: string;
   rating: {
     rate: number;

@@ -5,7 +5,10 @@ import { Prisma } from 'generated/prisma';
 import { firstValueFrom } from 'rxjs';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Product } from 'src/shared/types';
-import { productCategoryMapper } from 'src/shared/utils';
+import {
+  productCategoryDisplayMapper,
+  productCategoryMapper,
+} from 'src/shared/utils';
 import { ProductResponseDto } from './dto';
 
 @Injectable()
@@ -18,11 +21,12 @@ export class ProductService {
   async findAll() {
     const products = await this.prisma.product.findMany();
 
-    const productsDtos = products.map((product) => {
-      const { rate, count, price, ...rest } = product;
+    const productsDtos: ProductResponseDto[] = products.map((product) => {
+      const { rate, count, price, category, ...rest } = product;
 
       return {
         ...rest,
+        category: productCategoryDisplayMapper[category],
         price: String(price),
         rating: {
           rate,
