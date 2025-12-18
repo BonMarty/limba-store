@@ -5,6 +5,8 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { ProductResponseDto } from './dto';
 import { ProductService } from './product.service';
 
 @Controller('products')
@@ -13,13 +15,16 @@ export class ProductController {
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  findAll() {
-    return this.productService.findAll();
-  }
+  async findAll() {
+    const products = (await this.productService.findAll()).map((product) => ({
+      ...product,
+      price: Number(product.price),
+      rate: Number(product.rate),
+    }));
 
-  @Post('reset')
-  reset() {
-    return this.productService.reset();
+    return products.map((product) =>
+      plainToInstance(ProductResponseDto, product),
+    );
   }
 
   @Post('create-many')

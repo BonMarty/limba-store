@@ -1,15 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
 import { Prisma } from 'generated/prisma';
 import { firstValueFrom } from 'rxjs';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma';
 import { Product } from 'src/shared/types';
-import {
-  productCategoryDisplayMapper,
-  productCategoryMapper,
-} from 'src/shared/utils';
-import { ProductResponseDto } from './dto';
+import { productCategoryMapper } from 'src/shared/utils';
 
 @Injectable()
 export class ProductService {
@@ -19,29 +14,7 @@ export class ProductService {
   ) {}
 
   async findAll() {
-    const products = await this.prisma.product.findMany();
-
-    const productsDtos: ProductResponseDto[] = products.map((product) => {
-      const { rate, count, price, category, ...rest } = product;
-
-      return {
-        ...rest,
-        category: productCategoryDisplayMapper[category],
-        price: String(price),
-        rating: {
-          rate,
-          count,
-        },
-      };
-    });
-
-    return plainToInstance(ProductResponseDto, productsDtos);
-  }
-
-  async reset() {
-    await this.prisma.reset();
-
-    return true;
+    return await this.prisma.product.findMany();
   }
 
   async createMany() {

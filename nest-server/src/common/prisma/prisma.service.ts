@@ -23,8 +23,10 @@ export class PrismaService
   }
 
   async reset() {
-    return this.$queryRaw`
+    await this.$queryRaw`
       TRUNCATE TABLE "users", "products"
     `;
+
+    return true;
   }
 }
