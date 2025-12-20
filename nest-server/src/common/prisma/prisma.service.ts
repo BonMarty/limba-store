@@ -21,12 +21,4 @@ export class PrismaService
   async onModuleDestroy() {
     await this.$disconnect();
   }
-
-  async reset() {
-    await this.$queryRaw`
-      TRUNCATE TABLE "users", "products"
-    `;
-
-    return true;
-  }
 }

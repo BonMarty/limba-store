@@ -10,3 +10,8 @@ export interface Product {
     count: number;
   };
 }
+
+export interface NormalizedProduct extends Product {
+  createdAt: Date;
+  updatedAt: Date;
+}

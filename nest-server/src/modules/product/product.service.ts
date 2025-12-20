@@ -2,8 +2,9 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from 'generated/prisma';
 import { firstValueFrom } from 'rxjs';
+import { NormalizationService } from 'src/common/normalization';
 import { PrismaService } from 'src/common/prisma';
-import { Product } from 'src/shared/types';
+import type { Product } from 'src/shared/types';
 import { productCategoryMapper } from 'src/shared/utils';
 
 @Injectable()
@@ -11,10 +12,15 @@ export class ProductService {
   constructor(
     private readonly httpService: HttpService,
     private readonly prisma: PrismaService,
+    private readonly normalizationService: NormalizationService,
   ) {}
 
   async findAll() {
-    return await this.prisma.product.findMany();
+    const products = await this.prisma.product.findMany();
+
+    return products.map((product) =>
+      this.normalizationService.normalizeProduct(product),
+    );
   }
 
   async createMany() {

@@ -1,9 +1,9 @@
-import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 import type { Product } from 'generated/prisma';
 
 type BaseProduct = Omit<Product, 'price' | 'rate' | 'count' | 'category'>;
 
-interface Rating {
+class RatingDto {
   rate: number;
   count: number;
 }
@@ -15,11 +15,8 @@ export class ProductResponseDto implements BaseProduct {
   description: string;
   category: string;
   image: string;
-  @Transform(({ obj }: { obj: Rating }) => ({
-    rate: obj.rate,
-    count: obj.count,
-  }))
-  rating: Rating;
+  @Type(() => RatingDto)
+  rating: RatingDto;
   createdAt: Date;
   updatedAt: Date;
 }
