@@ -6,8 +6,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
-import { User } from 'generated/prisma';
 import { PrismaService } from 'src/common/prisma';
+import { JwtPayload } from 'src/shared/types';
 import { LoginDto, RegisterDto } from './dto';
 
 @Injectable()
@@ -64,8 +64,20 @@ export class AuthService {
     return this.generateTokens(user.id);
   }
 
+  async validate(id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return user;
+  }
+
   private generateTokens(id: number) {
-    const payload: Pick<User, 'id'> = { id };
+    const payload: JwtPayload = { id };
 
     const accessToken = this.jwtSerivce.sign(payload, {
       expiresIn: this.JWT_ACCESS_TOKEN_TTL,
