@@ -1,11 +1,5 @@
-import {
-  Body,
-  ClassSerializerInterceptor,
-  Controller,
-  Get,
-  Post,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Authorization } from 'src/common/decorators';
 import { CreateOrderDto } from './dto';
 import { OrderService } from './order.service';
 
@@ -13,12 +7,12 @@ import { OrderService } from './order.service';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   findAll() {
     return this.orderService.findAll();
   }
 
+  @Authorization()
   @Post('create')
   create(@Body() dto: CreateOrderDto) {
     return this.orderService.create(dto);

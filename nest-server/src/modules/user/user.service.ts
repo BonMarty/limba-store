@@ -10,6 +10,9 @@ export class UserService {
       where: {
         id,
       },
+      omit: {
+        password: true,
+      },
     });
 
     return user;
