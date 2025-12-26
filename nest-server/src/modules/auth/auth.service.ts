@@ -2,33 +2,38 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { PrismaService } from 'src/common/prisma';
-import { JwtPayload } from 'src/shared/types';
+import type { JwtPayload } from 'src/shared/types';
+import { isDev } from 'src/shared/utils';
 import { LoginDto, RegisterDto } from './dto';
 
 @Injectable()
 export class AuthService {
   private readonly JWT_ACCESS_TOKEN_TTL: number;
   private readonly JWT_REFRESH_TOKEN_TTL: number;
+  private readonly COOKIE_DOMAIN: string;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
     private readonly jwtSerivce: JwtService,
   ) {
-    this.JWT_ACCESS_TOKEN_TTL = this.configService.getOrThrow<number>(
-      'JWT_ACCESS_TOKEN_TTL',
+    this.JWT_ACCESS_TOKEN_TTL = Number(
+      this.configService.getOrThrow<string>('JWT_ACCESS_TOKEN_TTL'),
     );
-    this.JWT_REFRESH_TOKEN_TTL = this.configService.getOrThrow<number>(
-      'JWT_REFRESH_TOKEN_TTL',
+    this.JWT_REFRESH_TOKEN_TTL = Number(
+      this.configService.getOrThrow<string>('JWT_REFRESH_TOKEN_TTL'),
     );
+    this.COOKIE_DOMAIN = this.configService.getOrThrow<string>('COOKIE_DOMAIN');
   }
 
-  async register(dto: RegisterDto) {
+  async register(res: FastifyReply, dto: RegisterDto) {
     const existedUser = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -45,13 +50,17 @@ export class AuthService {
       },
     });
 
-    return this.generateTokens(user.id);
+    return this.auth(res, user.id);
   }
 
-  async login(dto: LoginDto) {
+  async login(res: FastifyReply, dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
+      },
+      select: {
+        id: true,
+        password: true,
       },
     });
 
@@ -61,7 +70,13 @@ export class AuthService {
 
     if (!isPasswordEqual) throw new NotFoundException('User not found');
 
-    return this.generateTokens(user.id);
+    return this.auth(res, user.id);
+  }
+
+  logout(res: FastifyReply) {
+    this.setCookie(res, 'refreshToken', new Date(0));
+
+    return true;
   }
 
   async validate(id: number) {
@@ -76,6 +91,37 @@ export class AuthService {
     return user;
   }
 
+  async refresh(req: FastifyRequest, res: FastifyReply) {
+    const refreshToken: string | null = req.cookies['refreshToken'] ?? null;
+
+    if (!refreshToken) throw new UnauthorizedException('Invalid refresh token');
+
+    const payload: JwtPayload = await this.jwtSerivce.verifyAsync(refreshToken);
+
+    if (!payload)
+      throw new UnauthorizedException('Invalid or expired refresh token');
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: payload.id,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return this.auth(res, user.id);
+  }
+
+  private auth(res: FastifyReply, id: number) {
+    const { accessToken, refreshToken } = this.generateTokens(id);
+
+    const expires = new Date(Date.now() + this.JWT_REFRESH_TOKEN_TTL * 1000);
+
+    this.setCookie(res, refreshToken, expires);
+
+    return { accessToken };
+  }
+
   private generateTokens(id: number) {
     const payload: JwtPayload = { id };
 
@@ -88,5 +134,15 @@ export class AuthService {
     });
 
     return { accessToken, refreshToken };
+  }
+
+  private setCookie(res: FastifyReply, value: string, expires: Date) {
+    res.cookie('refreshToken', value, {
+      httpOnly: true,
+      domain: this.COOKIE_DOMAIN,
+      expires,
+      secure: !isDev(this.configService),
+      sameSite: isDev(this.configService) ? 'none' : 'lax',
+    });
   }
 }

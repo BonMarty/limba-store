@@ -11,8 +11,8 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get()
   @UseInterceptors(ClassSerializerInterceptor)
+  @Get()
   async findAll() {
     return await this.productService.findAll();
   }

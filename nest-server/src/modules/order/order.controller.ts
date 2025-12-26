@@ -13,8 +13,8 @@ import { OrderService } from './order.service';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  @Get()
   @UseInterceptors(ClassSerializerInterceptor)
+  @Get()
   findAll() {
     return this.orderService.findAll();
   }
