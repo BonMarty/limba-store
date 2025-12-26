@@ -1,2 +1,3 @@
-export { HomePage } from "./home-page/ui";
-export { ProductsPage } from "./products-page/ui";
+export { AuthPage } from './auth-page';
+export { HomePage } from './home-page/ui';
+export { ProductsPage } from './products-page/ui';

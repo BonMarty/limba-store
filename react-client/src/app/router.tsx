@@ -1,21 +1,15 @@
-import React from "react";
 import { createBrowserRouter } from "react-router";
 
-import { HomePage } from "@/pages";
-
-const LazyProductsPage = React.lazy(() => import('@/pages/products-page').then(module => ({ default: module.ProductsPage })))
+import { AuthPage, ProductsPage } from "@/pages";
+import { routes } from "@/shared/routes";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: <HomePage />
+    path: routes.HOME.path,
+    element: <ProductsPage />
   },
   {
-    path: "/products",
-    element: (
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <LazyProductsPage />
-      </React.Suspense>
-    )
+    path: routes.AUTH.path,
+    element: <AuthPage />
   }
 ])

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { Authorization } from 'src/common/decorators';
+import { Authorization, Authorized } from 'src/common/decorators';
 import { CreateOrderDto } from './dto';
 import { OrderService } from './order.service';
 
@@ -10,6 +10,12 @@ export class OrderController {
   @Get()
   findAll() {
     return this.orderService.findAll();
+  }
+
+  @Authorization()
+  @Get('my')
+  findAllByUserId(@Authorized('id') userId: number) {
+    return this.orderService.findAllByUserId(userId);
   }
 
   @Authorization()

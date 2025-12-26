@@ -22,6 +22,19 @@ export class OrderService {
     );
   }
 
+  async findAllByUserId(userId: number) {
+    const orders = await this.prisma.order.findMany({
+      where: { userId },
+      include: {
+        items: true,
+      },
+    });
+
+    return orders.map((order) =>
+      this.normalizationService.normalizeOrder(order),
+    );
+  }
+
   async create(dto: CreateOrderDto) {
     const items = dto.items.map((item) => ({ id: item.id }));
 
