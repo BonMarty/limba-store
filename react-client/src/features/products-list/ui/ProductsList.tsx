@@ -1,8 +1,13 @@
-import { ProductCard } from "@/entities"
+import { ProductCard } from "@/entities/product"
 import { useGetProductsQuery } from "../api"
+import { useGetMeQuery } from "../api/api"
 
 export function ProductsList() {
   const { isLoading, isError, data } = useGetProductsQuery("")
+
+  const { data: meData } = useGetMeQuery("")
+
+  console.log("me", meData)
 
   if (isLoading) return <div>Loading...</div>
 

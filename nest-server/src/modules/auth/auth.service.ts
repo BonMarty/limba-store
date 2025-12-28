@@ -139,9 +139,8 @@ export class AuthService {
   private setCookie(res: FastifyReply, value: string, expires: Date) {
     res.cookie('refreshToken', value, {
       httpOnly: true,
-      domain: this.COOKIE_DOMAIN,
       expires,
-      secure: !isDev(this.configService),
+      secure: true,
       sameSite: isDev(this.configService) ? 'none' : 'lax',
     });
   }

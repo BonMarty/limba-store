@@ -11,8 +11,12 @@ export function AuthPage() {
         <div>
           {isLogin ? <LoginForm /> : <RegisterForm />}
         </div>
-        <p className='text-center' onClick={() => setIsLogin(prev => !prev)}>{isLogin ? "Do not have an accout yet? Register" : "Already got an account? Login"}</p>
+        <p className='text-center'>
+          <span>{isLogin ? "Do not have an account?" : "Already got an account?"}</span>
+          {' '}
+          <span onClick={() => setIsLogin(prev => !prev)} className='cursor-pointer text-emerald-500'>{isLogin ? "Register" : "Login"}</span>
+        </p>
       </div>
-    </AuthLayout >
+    </AuthLayout>
   )
 }
