@@ -1,4 +1,5 @@
-import { LoginForm, RegisterForm } from '@/features'
+import { LoginForm } from '@/features/login-form'
+import { RegisterForm } from '@/features/register-form'
 import { AuthLayout } from '@/layouts'
 import React from 'react'
 

@@ -84,6 +84,9 @@ export class AuthService {
       where: {
         id,
       },
+      omit: {
+        password: true,
+      },
     });
 
     if (!user) throw new NotFoundException('User not found');
@@ -142,6 +145,7 @@ export class AuthService {
       expires,
       secure: true,
       sameSite: isDev(this.configService) ? 'none' : 'lax',
+      partitioned: true,
     });
   }
 }

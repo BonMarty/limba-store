@@ -5,12 +5,8 @@ export const productsListApi = baseApi.injectEndpoints({
     getProducts: builder.query<Product[], string>({
       query: () => 'products',
     }),
-
-    getMe: builder.query({
-      query: () => 'auth/@me',
-    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetProductsQuery, useGetMeQuery } = productsListApi;
+export const { useGetProductsQuery } = productsListApi;

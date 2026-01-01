@@ -1,4 +1,4 @@
-import { ProductsList } from "@/features";
+import { ProductsList } from "@/features/products-list";
 import { MainLayout } from "@/layouts";
 
 export function ProductsPage() {

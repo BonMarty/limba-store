@@ -11,6 +11,10 @@ export const routes = {
     to: (id: number) => `/products/${id}`,
     path: '/products/:productId',
   },
+  PROFILE: {
+    to: '/profile',
+    path: '/profile',
+  },
   AUTH: {
     to: '/auth',
     path: '/auth',
