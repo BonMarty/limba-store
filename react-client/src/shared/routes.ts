@@ -15,6 +15,10 @@ export const routes = {
     to: '/profile',
     path: '/profile',
   },
+  CART: {
+    to: '/cart',
+    path: '/cart',
+  },
   AUTH: {
     to: '/auth',
     path: '/auth',

@@ -23,7 +23,7 @@ export function Header() {
   }, [])
 
   return (
-    <header className={`${isScrolled ? "backdrop-blur-lg bg-black/50" : "backdrop-blur-none bg-transparent"} sticky top-0 right-0 left-0 w-full h-fit flex justify-between items-center gap-4 p-4 transition-all duration-300`}>
+    <header className={`${isScrolled ? "backdrop-blur-lg bg-black/50" : "backdrop-blur-none bg-transparent"} sticky top-0 right-0 left-0 z-10 w-full h-fit flex justify-between items-center gap-4 p-4 transition-all duration-300`}>
       <Link to={routes.HOME.to} className="text-2xl font-semibold">LImba Store.</Link>
       <nav className="flex items-center gap-4">
         <Link className="transition-all duration-300 hover:text-emerald-500" to={routes.AUTH.to}>Auth</Link>
