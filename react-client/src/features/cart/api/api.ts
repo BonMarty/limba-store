@@ -10,7 +10,7 @@ const cartApi = baseApi.injectEndpoints({
     addToCart: builder.mutation<AddToCartResult, AddToCartBody>({
       query: (body) => ({
         url: 'carts/add-to-cart',
-        metod: 'POST',
+        method: 'POST',
         body,
       }),
     }),
@@ -18,7 +18,7 @@ const cartApi = baseApi.injectEndpoints({
     removeFromCart: builder.mutation<RemoveFromCartResult, RemoveFromCartBody>({
       query: (body) => ({
         url: 'carts/remove-from-cart',
-        metod: 'POST',
+        method: 'POST',
         body,
       }),
     }),
