@@ -6,7 +6,9 @@ import { productCategoryDisplayMapper } from 'src/shared/utils';
 @Injectable()
 export class NormalizationService {
   normalizeProduct(product: Product): NormalizedProduct {
-    const { price, rate, count, category, ...rest } = product;
+    const { cartId, ...productWithoutCartId } = product;
+
+    const { category, price, rate, count, ...rest } = productWithoutCartId;
 
     return {
       ...rest,
@@ -24,6 +26,16 @@ export class NormalizationService {
 
     return {
       ...rest,
+      items: items.map((item) => this.normalizeProduct(item)),
+    };
+  }
+
+  normalizeCart(cart: Prisma.CartGetPayload<{ include: { items: true } }>) {
+    const { items, totalPrice, ...rest } = cart;
+
+    return {
+      ...rest,
+      totalPrice: Number(totalPrice),
       items: items.map((item) => this.normalizeProduct(item)),
     };
   }

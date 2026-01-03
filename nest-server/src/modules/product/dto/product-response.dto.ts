@@ -1,7 +1,10 @@
 import { Type } from 'class-transformer';
 import type { Product } from 'generated/prisma';
 
-type BaseProduct = Omit<Product, 'price' | 'rate' | 'count' | 'category'>;
+type BaseProduct = Omit<
+  Product,
+  'price' | 'rate' | 'count' | 'category' | 'cartId'
+>;
 
 class RatingDto {
   rate: number;

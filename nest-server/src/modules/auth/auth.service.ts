@@ -17,7 +17,6 @@ import { LoginDto, RegisterDto } from './dto';
 export class AuthService {
   private readonly JWT_ACCESS_TOKEN_TTL: number;
   private readonly JWT_REFRESH_TOKEN_TTL: number;
-  private readonly COOKIE_DOMAIN: string;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -30,7 +29,6 @@ export class AuthService {
     this.JWT_REFRESH_TOKEN_TTL = Number(
       this.configService.getOrThrow<string>('JWT_REFRESH_TOKEN_TTL'),
     );
-    this.COOKIE_DOMAIN = this.configService.getOrThrow<string>('COOKIE_DOMAIN');
   }
 
   async register(res: FastifyReply, dto: RegisterDto) {
@@ -47,6 +45,25 @@ export class AuthService {
       data: {
         ...dto,
         password: await hash(dto.password, 10),
+      },
+    });
+
+    const cart = await this.prisma.cart.create({
+      data: {
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        cartId: cart.id,
       },
     });
 
