@@ -26,7 +26,7 @@ export class CartService {
   }
 
   async addToCartByUserId(userId: number, dto: AddToCartDto) {
-    return await this.prisma.cart.update({
+    await this.prisma.cart.update({
       where: {
         userId,
       },
@@ -41,10 +41,12 @@ export class CartService {
         items: true,
       },
     });
+
+    return this.calculateTotalPrice(userId);
   }
 
   async removeFromCartByUserId(userId: number, dto: AddToCartDto) {
-    return await this.prisma.cart.update({
+    await this.prisma.cart.update({
       where: {
         userId,
       },
@@ -57,6 +59,35 @@ export class CartService {
       },
       include: {
         items: true,
+      },
+    });
+
+    return this.calculateTotalPrice(userId);
+  }
+
+  async calculateTotalPrice(userId: number) {
+    const cart = await this.prisma.cart.findUnique({
+      where: {
+        userId,
+      },
+      include: {
+        items: true,
+      },
+    });
+
+    if (!cart) throw new NotFoundException('Cart not found');
+
+    const totalPrice = cart.items.reduce(
+      (accum, curr) => (accum += Number(curr.price)),
+      0,
+    );
+
+    return this.prisma.cart.update({
+      where: {
+        userId,
+      },
+      data: {
+        totalPrice,
       },
     });
   }

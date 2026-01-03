@@ -1,2 +1,1 @@
-export { useGetProductsQuery } from './api';
-export type { Product } from './types';
+export { useCreateManyProductsMutation, useGetProductsQuery } from './api';

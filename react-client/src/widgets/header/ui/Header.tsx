@@ -27,7 +27,11 @@ export function Header() {
       <Link to={routes.HOME.to} className="text-2xl font-semibold">LImba Store.</Link>
       <nav className="flex items-center gap-4">
         <Link className="transition-all duration-300 hover:text-emerald-500" to={routes.AUTH.to}>Auth</Link>
-        <Link className="transition-all duration-300 hover:text-emerald-500" to={routes.PROFILE.to}>Profile</Link>
+        <Link className="transition-all duration-300 hover:text-emerald-500" to={routes.PROFILE.to}>
+          <svg className="transition-all duration-300 fill-white hover:fill-emerald-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+            <path d="M12 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z" />
+          </svg>
+        </Link>
         <CartIcon />
       </nav>
     </header>

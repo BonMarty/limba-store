@@ -1,2 +1,2 @@
-export { cartReducer, selectCart, selectCartIsOpen, toggleCart } from './model';
+export { useGetMyCartQuery } from './api';
 export { Cart, Checkout, ToggleProduct } from './ui';

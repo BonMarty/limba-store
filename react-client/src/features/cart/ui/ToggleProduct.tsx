@@ -1,22 +1,30 @@
 import type { Product } from '@/shared/api'
-import { useAppDispatch, useAppSelector } from '@/shared/lib'
 import { Button } from '@/shared/ui'
-import { addToCart, removeFromCart, selectCart } from '../model'
+import { useAddToCartMutation, useGetMyCartQuery, useRemoveFromCartMutation } from '../api'
 
 export function ToggleProduct(props: Product) {
   const { id } = props
 
-  const cart = useAppSelector(selectCart)
-  const dispatch = useAppDispatch()
+  const { isLoading, data, refetch } = useGetMyCartQuery("")
+  const [addTrigger] = useAddToCartMutation()
+  const [removeTrigger] = useRemoveFromCartMutation()
 
-  const isAlreadyInCart = !!cart.find((item) => item.id === id)
+  const isAlreadyInCart = !!data?.items.find((item) => item.id === id)
 
-  const onClick = () => {
+  const onClick = async () => {
     if (isAlreadyInCart) {
-      dispatch(removeFromCart(id))
+      await removeTrigger({ item: props })
+      await refetch()
     } else {
-      dispatch(addToCart(props))
+      await addTrigger({ item: props })
+      await refetch()
     }
+  }
+
+  if (isLoading) {
+    return (
+      <Button disabled>Loading...</Button>
+    )
   }
 
   return (

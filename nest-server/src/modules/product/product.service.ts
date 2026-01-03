@@ -16,7 +16,11 @@ export class ProductService {
   ) {}
 
   async findAll() {
-    const products = await this.prisma.product.findMany();
+    const products = await this.prisma.product.findMany({
+      orderBy: {
+        id: 'asc',
+      },
+    });
 
     return products.map((product) =>
       this.normalizationService.normalizeProduct(product),

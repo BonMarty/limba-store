@@ -5,8 +5,15 @@ export const productsListApi = baseApi.injectEndpoints({
     getProducts: builder.query<Product[], string>({
       query: () => 'products',
     }),
+
+    createManyProducts: builder.mutation<{ count: number }, void>({
+      query: () => ({
+        url: 'products/create-many',
+        method: 'POST',
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetProductsQuery } = productsListApi;
+export const { useGetProductsQuery, useCreateManyProductsMutation } = productsListApi;
