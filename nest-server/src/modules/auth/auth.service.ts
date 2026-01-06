@@ -48,23 +48,25 @@ export class AuthService {
       },
     });
 
-    const cart = await this.prisma.cart.create({
-      data: {
-        user: {
-          connect: {
-            id: user.id,
+    await this.prisma.$transaction(async (tx) => {
+      const cart = await tx.cart.create({
+        data: {
+          user: {
+            connect: {
+              id: user.id,
+            },
           },
         },
-      },
-    });
+      });
 
-    await this.prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        cartId: cart.id,
-      },
+      await tx.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          cartId: cart.id,
+        },
+      });
     });
 
     return this.auth(res, user.id);
