@@ -6,6 +6,7 @@ export interface GetMyCartResult {
   updatedAt: Date;
   userId: number;
   items: Product[];
+  totalPrice: number;
 }
 
 export interface AddToCartResult {
@@ -28,4 +29,15 @@ export interface RemoveFromCartResult {
 
 export interface RemoveFromCartBody {
   item: Product;
+}
+
+export interface CheckoutResult {
+  id: number;
+  items: Product[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CheckoutBody {
+  items: Product[];
 }

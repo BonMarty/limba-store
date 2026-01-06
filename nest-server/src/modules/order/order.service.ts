@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NormalizationService } from 'src/common/normalization';
 import { PrismaService } from 'src/common/prisma';
+import { CartService } from '../cart/cart.service';
 import { CreateOrderDto } from './dto';
 
 @Injectable()
@@ -8,6 +9,7 @@ export class OrderService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly normalizationService: NormalizationService,
+    private readonly cartService: CartService,
   ) {}
 
   async findAll() {
@@ -35,12 +37,12 @@ export class OrderService {
     );
   }
 
-  async create(dto: CreateOrderDto) {
+  async create(userId: number, dto: CreateOrderDto) {
     const items = dto.items.map((item) => ({ id: item.id }));
 
     const order = await this.prisma.order.create({
       data: {
-        userId: dto.userId,
+        userId,
         items: {
           connect: items,
         },
@@ -49,6 +51,8 @@ export class OrderService {
         items: true,
       },
     });
+
+    await this.cartService.clearCart(userId);
 
     return order;
   }

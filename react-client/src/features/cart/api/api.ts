@@ -1,5 +1,5 @@
 import { baseApi } from '@/shared/api';
-import type { AddToCartBody, AddToCartResult, GetMyCartResult, RemoveFromCartBody, RemoveFromCartResult } from './types';
+import type { AddToCartBody, AddToCartResult, CheckoutBody, CheckoutResult, GetMyCartResult, RemoveFromCartBody, RemoveFromCartResult } from './types';
 
 const cartApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,7 +22,22 @@ const cartApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+
+    clearCart: builder.mutation<boolean, void>({
+      query: () => ({
+        url: 'carts/clear-cart',
+        method: 'POST',
+      }),
+    }),
+
+    checkout: builder.mutation<CheckoutResult, CheckoutBody>({
+      query: (body) => ({
+        url: 'orders/create',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetMyCartQuery, useAddToCartMutation, useRemoveFromCartMutation } = cartApi;
+export const { useGetMyCartQuery, useAddToCartMutation, useRemoveFromCartMutation, useClearCartMutation, useCheckoutMutation } = cartApi;

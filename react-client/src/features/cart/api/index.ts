@@ -1,1 +1,1 @@
-export { useAddToCartMutation, useGetMyCartQuery, useRemoveFromCartMutation } from './api';
+export { useAddToCartMutation, useCheckoutMutation, useClearCartMutation, useGetMyCartQuery, useRemoveFromCartMutation } from './api';

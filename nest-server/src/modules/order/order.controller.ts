@@ -20,7 +20,7 @@ export class OrderController {
 
   @Authorization()
   @Post('create')
-  create(@Body() dto: CreateOrderDto) {
-    return this.orderService.create(dto);
+  create(@Authorized('id') userId: number, @Body() dto: CreateOrderDto) {
+    return this.orderService.create(userId, dto);
   }
 }

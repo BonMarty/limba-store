@@ -30,4 +30,10 @@ export class CartController {
   ) {
     return this.cartService.removeFromCartByUserId(userId, dto);
   }
+
+  @Authorization()
+  @Post('clear-cart')
+  clearCartByUserId(@Authorized('id') userId: number) {
+    return this.cartService.clearCart(userId);
+  }
 }

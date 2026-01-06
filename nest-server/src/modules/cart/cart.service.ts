@@ -65,6 +65,35 @@ export class CartService {
     return this.calculateTotalPrice(userId);
   }
 
+  async clearCart(userId: number) {
+    return this.prisma.$transaction(async (tx) => {
+      const cart = await tx.cart.findUnique({
+        where: {
+          userId,
+        },
+        include: {
+          items: true,
+        },
+      });
+
+      if (!cart) throw new NotFoundException('Cart not found');
+
+      await tx.cart.update({
+        where: {
+          userId,
+        },
+        data: {
+          items: {
+            disconnect: cart.items.map((item) => ({ id: item.id })),
+          },
+          totalPrice: 0,
+        },
+      });
+
+      return true;
+    });
+  }
+
   async calculateTotalPrice(userId: number) {
     const cart = await this.prisma.cart.findUnique({
       where: {
