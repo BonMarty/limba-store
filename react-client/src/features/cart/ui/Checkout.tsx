@@ -1,19 +1,27 @@
+import type { Product } from "@/shared/api";
 import { Button } from "@/shared/ui";
-import { useCheckoutMutation, useGetMyCartQuery } from "../api";
+import { useCheckoutMutation } from "../api";
 
-export function Checkout() {
-  const { isLoading, error, data } = useGetMyCartQuery("")
+interface CheckoutProps {
+  items: Product[];
+  refetch: () => void;
+}
+
+export function Checkout(props: CheckoutProps) {
+  const { items, refetch } = props
+
   const [trigger] = useCheckoutMutation()
 
-  if (isLoading) return <div>Loading...</div>
+  const handleCheckout = async (items: Product[]) => {
+    await trigger({ items })
+    refetch()
+  }
 
-  if (error) return <div>{JSON.stringify(error)}</div>
-
-  if (!data) return <div>No data</div>
+  if (!items.length) return null
 
   return (
     <div>
-      <Button onClick={() => trigger({ items: data.items })}>Checkout</Button>
+      <Button onClick={() => handleCheckout(items)}>Checkout</Button>
     </div>
   )
 }

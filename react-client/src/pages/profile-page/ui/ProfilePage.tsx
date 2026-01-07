@@ -3,7 +3,7 @@ import { ProfileInfo, ProfileOrders } from '@/widgets'
 
 export function ProfilePage() {
   return (
-    <MainLayout className='flex gap-4 px-4'>
+    <MainLayout className='flex gap-4 p-4'>
       <ProfileInfo />
       <ProfileOrders />
     </MainLayout>

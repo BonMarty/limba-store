@@ -8,10 +8,10 @@ export function ProductCard(props: ProductCardProps) {
   const { image, title, price, actions } = props
 
   return (
-    <div>
-      <img src={image} alt={title} />
-      <p>{title}</p>
-      <p>{price}</p>
+    <div className="grid grid-rows-1 h-full space-y-2">
+      <img src={image} alt={title} className="object-contain h-96" />
+      <p className="text-lg">{title}</p>
+      <p className="text-xl font-semibold">${price}</p>
       {actions ? actions : null}
     </div>
   )

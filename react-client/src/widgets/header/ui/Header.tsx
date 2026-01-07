@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { CartIcon } from "./CartIcon";
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = React.useState(false)
+  const [isScrolled, setIsScrolled] = React.useState(() => window.scrollY > 0 ? true : false)
 
   React.useEffect(() => {
     const controller = new AbortController()

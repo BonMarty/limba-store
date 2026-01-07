@@ -6,8 +6,15 @@ export const profileInfoApi = baseApi.injectEndpoints({
     getMe: builder.query<GetMeResult, string>({
       query: () => 'auth/@me',
     }),
+
+    logout: builder.mutation<boolean, void>({
+      query: () => ({
+        url: 'auth/logout',
+        method: 'POST',
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetMeQuery } = profileInfoApi;
+export const { useGetMeQuery, useLogoutMutation } = profileInfoApi;

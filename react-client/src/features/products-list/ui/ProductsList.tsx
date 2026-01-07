@@ -1,17 +1,16 @@
 import { ProductCard } from "@/entities/product"
 import { ToggleProduct } from "@/features/cart"
 import { Button } from "@/shared/ui"
-import React from "react"
 import { useCreateManyProductsMutation, useGetProductsQuery } from "../api"
 
 export function ProductsList() {
   const { isLoading, error, data, refetch } = useGetProductsQuery("")
   const [trigger] = useCreateManyProductsMutation()
 
-  const createManyProducts = React.useCallback(async () => {
+  const createManyProducts = async () => {
     await trigger()
-    await refetch()
-  }, [trigger, refetch])
+    refetch()
+  }
 
   if (isLoading) return <div>Loading...</div>
 
