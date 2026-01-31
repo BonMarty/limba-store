@@ -1,0 +1,1 @@
+export const PAYMENT_INSTANCE = 'PAYMENT_INSTANCE';
