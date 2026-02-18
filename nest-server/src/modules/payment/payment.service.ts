@@ -2,7 +2,7 @@ import type { YooCheckout } from '@a2seven/yoo-checkout';
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { InjectCheckout } from 'src/common/decorators';
-import { CreatePaymentDto } from './dto';
+import type { CreatePaymentDto } from './dto';
 
 @Injectable()
 export class PaymentService {
@@ -22,8 +22,9 @@ export class PaymentService {
           capture: true,
           confirmation: {
             type: 'redirect',
-            return_url: 'test',
+            return_url: 'https://test.ru',
           },
+          description: 'Тестовая оплата',
         },
         randomUUID(),
       );

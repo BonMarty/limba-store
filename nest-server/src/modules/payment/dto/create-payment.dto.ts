@@ -13,9 +13,10 @@ export class CreatePaymentDto implements Partial<BasePayment> {
   @IsNotEmpty({ message: 'Value is required' })
   value: string;
 
+  @IsString({ message: 'Type should be string' })
   @IsIn(Object.keys(paymentMethodTypeMap), {
     message: 'Type should be one of allowed payment method types',
   })
-  @IsString({ message: 'Type should be string' })
+  @IsNotEmpty({ message: 'Type is required' })
   type: IPaymentMethodType;
 }

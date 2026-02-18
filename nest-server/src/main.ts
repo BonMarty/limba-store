@@ -6,6 +6,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 declare const module: any;
@@ -30,6 +31,15 @@ async function bootstrap() {
     secret: cookieSecret,
   });
 
+  const config = new DocumentBuilder()
+    .setTitle('LImba Store API')
+    .setDescription('API description')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 
   if (module.hot) {
@@ -37,4 +47,4 @@ async function bootstrap() {
     module.hot.dispose(() => app.close());
   }
 }
-bootstrap();
+void bootstrap();

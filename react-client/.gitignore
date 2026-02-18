@@ -25,3 +25,5 @@ dist-ssr
 
 localhost+*.pem
 *.pem
+
+/generated

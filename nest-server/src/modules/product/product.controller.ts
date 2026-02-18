@@ -3,8 +3,11 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { FindAllQueryDto, ProductResponseDto } from './dto';
 import { ProductService } from './product.service';
 
 @Controller('products')
@@ -13,8 +16,14 @@ export class ProductController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll() {
-    return await this.productService.findAll();
+  @ApiOperation({ summary: 'Get list of products' })
+  @ApiOkResponse({
+    description: 'Return list of products',
+    type: ProductResponseDto,
+    isArray: true,
+  })
+  async findAll(@Query() query: FindAllQueryDto) {
+    return await this.productService.findAll(query);
   }
 
   @Post('create-many')
