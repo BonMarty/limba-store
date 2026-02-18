@@ -2,7 +2,16 @@ import { baseApi, type Product } from '@/shared/api';
 
 export const productsListApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<Product[], string>({
+    getProducts: builder.query<
+      {
+        data: Product[];
+        meta: {
+          total: number;
+          page: number;
+        };
+      },
+      string
+    >({
       query: () => 'products',
     }),
 

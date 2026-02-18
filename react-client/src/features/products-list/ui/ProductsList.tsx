@@ -18,12 +18,12 @@ export function ProductsList() {
 
   if (!data) return <div>No data</div>
 
-  if (data.length === 0) {
+  if (data.data.length === 0) {
     return <Button onClick={createManyProducts}>Create many</Button>
   }
 
   return (
-    <ul className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">{data.map((product) => (
+    <ul className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">{data.data.map((product) => (
       <li key={product.id}>
         <ProductCard {...product} actions={<ToggleProduct {...product} />} />
       </li>
